@@ -1,0 +1,1 @@
+# First day assignment of Avent of Code 2023-12-01
