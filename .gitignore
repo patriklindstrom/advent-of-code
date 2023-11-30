@@ -15,3 +15,4 @@ Cargo.lock
 
 # Ignore jetbrains Rust Rover settings
 */.idea
+.idea/
