@@ -29,20 +29,14 @@ fn find_digits(s: &str) -> Vec<char> {
             if let Some(&digit) = map.get(matching_word) {
                 result.push(digit);
             }
-            current_index += matching_word.len(); // Skip past the matched word
+            current_index += matching_word.len();
         } else {
-            current_index += 1; // No match found, move one character forward
+            current_index += 1;
         }
     }
 
     result
 }
-
-// Rest of your code, including the `number_word_map` function, remains the same.
-
-
-
-
 
 fn concatenate_first_last(digits: Vec<char>) -> Option<i32> {
     match digits.first().zip(digits.last()) {
@@ -53,6 +47,8 @@ fn concatenate_first_last(digits: Vec<char>) -> Option<i32> {
         None => None,
     }
 }
+// To simply the code, we use a HashMap to map the number words to the digits. Both the digits
+//  and the number words are mapped to the same character, so we can use the same HashMap.
 fn number_word_map() -> HashMap<&'static str, char> {
     let mapping = [
         ("0", '0'), ("zero", '0'),
