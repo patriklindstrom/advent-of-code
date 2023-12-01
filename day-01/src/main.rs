@@ -70,7 +70,8 @@ fn number_word_map() -> HashMap<&'static str, char> {
 }
 fn main() {
      let file_path = "puzzledata/calibrationdata.txt";
-    // let file_path = "puzzledata/testdata.txt";
+     // let file_path = "puzzledata/testdata1.txt";
+     // let file_path = "puzzledata/testdata2.txt";
     match read_lines(file_path) {
         Ok(lines) => {
             let mut sum = 0;
@@ -79,11 +80,11 @@ fn main() {
             println!("Number of no_of_records in file: {}", no_of_records);
 
             for cal_val in lines {
-                 println!("{}", cal_val);
+                 print!("{};", cal_val);
                 let digits = find_digits(&*cal_val);
-                 println!("Digits found: {:?}", digits);
+                 print!("Digits found: {:?};", digits);
                 if let Some(number) = concatenate_first_last(digits) {
-                    println!("String: '{}', Number: {}", cal_val, number);
+                    println!(" Number: {}",  number);
                     sum += number;
                 } else {
                     println!("***  String: '{}', No digits found", cal_val);
