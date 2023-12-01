@@ -11,27 +11,41 @@ fn read_lines<P>(filename: P) -> io::Result<Vec<String>>
     buffer.lines().collect()
 }
 
-fn find_digits(s: &str) -> Vec<char> {
+fn find_first_and_last_digit(s: &str) -> Vec<char> {
     let map = number_word_map();
     let mut result = Vec::new();
-    let mut current_index = 0;
 
-    while current_index < s.len() {
-        let mut longest_match = None;
+    // Find first valid digit or digit word
+    let mut first_digit_found = false;
+    let mut current_index = 0;
+    while current_index < s.len() && !first_digit_found {
         for end in (current_index + 1)..=s.len() {
             let substring = &s[current_index..end];
-            if map.contains_key(substring) {
-                longest_match = Some(substring);
+            if let Some(&digit) = map.get(substring) {
+                result.push(digit);
+                first_digit_found = true;
+                break;
             }
         }
-
-        if let Some(matching_word) = longest_match {
-            if let Some(&digit) = map.get(matching_word) {
-                result.push(digit);
-            }
-            current_index += matching_word.len();
-        } else {
+        if !first_digit_found {
             current_index += 1;
+        }
+    }
+
+    // Find last valid digit or digit word
+    let mut last_digit_found = false;
+    let mut current_index = s.len();
+    while current_index > 0 && !last_digit_found {
+        for start in (0..current_index).rev() {
+            let substring = &s[start..current_index];
+            if let Some(&digit) = map.get(substring) {
+                result.push(digit);
+                last_digit_found = true;
+                break;
+            }
+        }
+        if !last_digit_found {
+            current_index -= 1;
         }
     }
 
@@ -77,7 +91,7 @@ fn main() {
 
             for cal_val in lines {
                  print!("{};", cal_val);
-                let digits = find_digits(&*cal_val);
+                let digits = find_first_and_last_digit(&*cal_val);
                  print!("Digits found: {:?};", digits);
                 if let Some(number) = concatenate_first_last(digits) {
                     println!(" Number: {}",  number);
