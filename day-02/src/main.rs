@@ -4,12 +4,14 @@ use std::io::{self, BufRead};
 use std::path::Path;
 
 fn main() -> io::Result<()> {
-    let path = Path::new("testdata/testgame.csv");
+    let path = Path::new("puzzledata/gamedata.csv");
     let file = File::open(&path)?;
     let reader = io::BufReader::new(file);
 
-    let max_cubes   = [("red", 12), ("green", 13), ("blue", 14)]
+    let max_cubes = [("red", 12), ("green", 13), ("blue", 14)]
         .iter().cloned().collect::<HashMap<_, _>>();
+
+    let mut sum_game_id = 0;
 
     for (index, line) in reader.lines().enumerate() {
         let line = line?;
@@ -17,7 +19,7 @@ fn main() -> io::Result<()> {
         let game_id: i32 = parts[0][5..].trim().parse().unwrap();
 
         let rounds: Vec<&str> = parts[1].split(';').collect();
-        let mut game_cubes = HashMap::new();
+        let mut is_plausible = true;
 
         for round in rounds {
             let cubes: Vec<&str> = round.split(',').collect();
@@ -26,18 +28,22 @@ fn main() -> io::Result<()> {
                 let count: i32 = cube_parts[0].parse().unwrap();
                 let color = cube_parts[1];
 
-                *game_cubes.entry(color).or_insert(0) += count;
+                if count > *max_cubes.get(color).unwrap() {
+                    is_plausible = false;
+                    break;
+                }
+            }
+            if !is_plausible {
+                break;
             }
         }
 
-        println!("Game ID: {}", game_id);
-        for (color, count) in game_cubes {
-            println!("Color: {}, Count: {}", color, count);
-            if count > *max_cubes.get(color).unwrap() {
-                println!("The game {} is not plausible", game_id);
-            }
+        if is_plausible {
+            sum_game_id += game_id;
         }
     }
+
+    println!("Sum of Game IDs for plausible games: {}", sum_game_id);
 
     Ok(())
 }
